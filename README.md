@@ -11,6 +11,6 @@
 已写的主题是三种 PDU：I-PDU、N-PDU、L-PDU。
 
 - 路线：[01 三种 PDU](学习路线/01-三种PDU.md)
-- 笔记：用浏览器打开 [笔记/三种PDU.html](笔记/三种PDU.html)（仓库网页上只会看到源码）
+- 笔记：[三种PDU.pdf](笔记/三种PDU.pdf)
 
 笔记字体是霞鹜文楷的子集，授权见 [笔记/fonts/OFL.txt](笔记/fonts/OFL.txt)。页面不依赖外网。
