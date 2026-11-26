@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>笔记 · I-PDU、N-PDU、L-PDU</title>
+  <style>
+    @font-face {
+      font-family: "LXGW WenKai";
+      src: url("fonts/LXGWWenKai-Regular.woff2") format("woff2");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --ink: #2c261f;
+      --ink-soft: #5c5146;
+      --paper: #fbf6ea;
+      --desk: #e6ddcf;
+      --line: #e4d3b8;
+      --margin: #e07a84;
+      --i: #f3ddb8;
+      --i-ink: #6a4516;
+      --n: #d5e6d6;
+      --n-ink: #1f5a3c;
+      --l: #ddd9f0;
+      --l-ink: #34315f;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--desk);
+      color: var(--ink);
+      font-family: "LXGW WenKai", "Kaiti SC", "KaiTi", "STKaiti", serif;
+      font-size: 20px;
+      line-height: 1.65;
+    }
+
+    .sheet {
+      max-width: 860px;
+      margin: 28px auto 48px;
+      padding: 42px 48px 56px 68px;
+      background: var(--paper);
+      border: 1px solid #e3d5bf;
+      box-shadow: 10px 10px 0 #e4d8c4;
+      position: relative;
+    }
+
+    .sheet::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 42px;
+      width: 2px;
+      background: var(--margin);
+    }
+
+    header h1 {
+      margin: 0 0 4px;
+      font-size: 40px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      line-height: 1.25;
+    }
+
+    .kicker {
+      margin: 0 0 8px;
+      color: var(--ink-soft);
+      font-size: 16px;
+    }
+
+    h2 {
+      margin: 1.4em 0 0.4em;
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1.3;
+    }
+
+    p { margin: 0.45em 0 0.7em; }
+
+    a { color: var(--n-ink); }
+
+    .lead {
+      font-size: 22px;
+    }
+
+    figure {
+      margin: 1.1em 0 1.3em;
+    }
+
+    figcaption {
+      margin-top: 8px;
+      color: var(--ink-soft);
+      font-size: 17px;
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .band {
+      border: 1.5px solid var(--ink);
+      border-radius: 14px 18px 12px 16px;
+      padding: 12px 16px 14px;
+    }
+
+    .band h3 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 400;
+    }
+
+    .band p {
+      margin: 2px 0 0;
+      font-size: 17px;
+    }
+
+    .band small {
+      display: block;
+      margin-top: 4px;
+      color: var(--ink-soft);
+      font-size: 15px;
+    }
+
+    .i { background: var(--i); color: var(--i-ink); }
+    .n { background: var(--n); color: var(--n-ink); }
+    .l { background: var(--l); color: var(--l-ink); }
+
+    .down {
+      align-self: center;
+      color: var(--ink-soft);
+      font-size: 15px;
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    .frames, .paths {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .card {
+      border: 1.5px solid var(--ink);
+      border-radius: 16px;
+      padding: 12px 14px 14px;
+      background: #fffdf8;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      font-weight: 400;
+    }
+
+    .can {
+      display: flex;
+      align-items: stretch;
+      min-height: 86px;
+      border: 1.5px dashed var(--ink-soft);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8px 10px;
+      border-right: 1.5px solid var(--ink);
+      font-size: 16px;
+      line-height: 1.3;
+    }
+
+    .field:last-child { border-right: 0; flex: 1; }
+
+    .field b {
+      font-weight: 400;
+      font-size: 18px;
+    }
+
+    .id { background: #f7f1e4; min-width: 72px; }
+    .dlc { background: #f3efe6; min-width: 52px; }
+    .payload { background: var(--i); color: var(--i-ink); }
+    .pci { background: var(--n); color: var(--n-ink); min-width: 64px; }
+
+    .card .note {
+      margin: 8px 0 0;
+      font-size: 16px;
+    }
+
+    ol.path {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    ol.path li {
+      position: relative;
+      margin: 0;
+      padding: 7px 10px;
+      border: 1.5px solid var(--ink);
+      border-radius: 999px;
+      text-align: center;
+      background: #fffdf8;
+      font-size: 17px;
+    }
+
+    ol.path li + li { margin-top: 16px; }
+
+    ol.path li + li::before {
+      content: "↓";
+      position: absolute;
+      top: -16px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 13px;
+      line-height: 16px;
+      color: var(--ink-soft);
+    }
+
+    ol.path li.here { background: var(--i); color: var(--i-ink); }
+    ol.path li.cut { background: var(--n); color: var(--n-ink); }
+    ol.path li.wire { background: var(--l); color: var(--l-ink); }
+
+    .pair {
+      margin: 0.75em 0 1em;
+      padding-bottom: 0.7em;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pair p { margin: 0.15em 0; }
+
+    .wrong {
+      color: var(--ink-soft);
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+    }
+
+    .aside {
+      margin: 1em 0;
+      padding: 4px 0 4px 14px;
+      border-left: 2px solid var(--margin);
+    }
+
+    details {
+      margin-top: 0.6em;
+    }
+
+    summary {
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    footer {
+      margin-top: 1.6em;
+      color: var(--ink-soft);
+      font-size: 15px;
+    }
+
+    @media (max-width: 720px) {
+      body { font-size: 18px; }
+      .sheet {
+        margin: 0;
+        padding: 28px 16px 40px 28px;
+        box-shadow: none;
+      }
+      .sheet::before { left: 14px; }
+      header h1 { font-size: 32px; }
+      .frames, .paths { grid-template-columns: 1fr; }
+      .can { flex-wrap: wrap; }
+      .field { min-width: 46%; border-bottom: 1px solid var(--ink); }
+    }
+  </style>
+</head>
+<body>
+  <article class="sheet">
+    <header>
+      <p class="kicker">通信栈手账 · 只写这一页能复述的部分</p>
+      <h1>I-PDU、N-PDU、L-PDU</h1>
+    </header>
+
+    <p class="lead">总线上只有帧。软件里却有三个名字，因为每一层只关心自己的那一截。</p>
+
+    <h2>先看两个例子</h2>
+    <p>车速是 16 位，和同一帧里的别的信号排在一起，经典 CAN 的 8 个数据字节装得下。应用只认识「车速」这个信号。COM 排好的一整包叫 I-PDU。PduR 照着配置表把它交给 CanIf。CanIf 配上这一帧的 CAN ID，驱动发出去。总线上的这一帧叫 L-PDU。没有人把它切开，所以没有 N-PDU。</p>
+    <p>诊断仪来读 200 字节。DCM 交出的仍是一整条 I-PDU，一帧装不下。PduR 把它交给 CanTp。CanTp 加上帧类型，切成首帧和连续帧，并等对方的流控。每一小段叫 N-PDU，再各自放进一个 L-PDU。</p>
+
+    <h2>三个名字各站一层</h2>
+    <figure>
+      <div class="stack" role="img" aria-label="自上而下三层：I-PDU 在交互层，N-PDU 在传输协议，L-PDU 在链路上。短报文可以跳过中间层。">
+        <div class="band i">
+          <h3>I-PDU · 交互层</h3>
+          <p>COM 把信号装进这里。DCM 的诊断报文对 PduR 来说也是 I-PDU。</p>
+          <small>PduR 只按编号转发，不拆信号，也不分段。</small>
+        </div>
+        <div class="down">短报文从这里直接跳到链路<br>上层的整段 PDU = 下层的 SDU</div>
+        <div class="band n">
+          <h3>N-PDU · 传输协议</h3>
+          <p>只有走 CanTp 时才出现。SF 单帧，FF 首帧，CF 连续帧，FC 流控。</p>
+          <small>PCI 由发送侧加上，接收侧拼完再去掉。</small>
+        </div>
+        <div class="down">每一段 N-PDU 都要放进一帧</div>
+        <div class="band l">
+          <h3>L-PDU · 链路层</h3>
+          <p>总线上的一帧：标识、DLC、数据。CAN 上由 CanIf 和驱动完成。</p>
+          <small>同一段字节，CanIf 把它叫 L-SDU。</small>
+        </div>
+      </div>
+      <figcaption>I 是交互层，N 是网络层（在 AUTOSAR 里就是传输协议），L 是数据链路层。前缀标的是观察点，不是三份数据。</figcaption>
+    </figure>
+
+    <h2>同一帧里，字节怎么排</h2>
+    <figure>
+      <div class="frames">
+        <div class="card">
+          <h3>短报文，一帧装完</h3>
+          <div class="can" aria-label="L-PDU 由 CAN ID、DLC 和整条 I-PDU 组成">
+            <span class="field id"><b>CAN ID</b>配置里查</span>
+            <span class="field dlc"><b>DLC</b>长度码</span>
+            <span class="field payload"><b>整条 I-PDU</b>也就是 L-SDU</span>
+          </div>
+          <p class="note">没有 N-PDU。模块之间递交的缓冲区通常只有右边这段数据，标识在 CanIf 的表里。</p>
+        </div>
+        <div class="card">
+          <h3>长报文里的其中一帧</h3>
+          <div class="can" aria-label="L-PDU 的数据段是一个 N-PDU：PCI 加上 I-PDU 的一段">
+            <span class="field id"><b>CAN ID</b>配置里查</span>
+            <span class="field dlc"><b>DLC</b>长度码</span>
+            <span class="field pci"><b>PCI</b>FF / CF</span>
+            <span class="field payload"><b>I-PDU 的一段</b>N-SDU 的一部分</span>
+          </div>
+          <p class="note">虚线框是 L-PDU。绿格加黄格才是一个 N-PDU。许多这样的帧拼回一条 I-PDU。</p>
+        </div>
+      </div>
+      <figcaption>式子：(X)-PDU = (X-1)-SDU。上层整包交下来，就成为下层的用户数据。下层需要时再加自己的 PCI。</figcaption>
+    </figure>
+
+    <h2>两条发送路径</h2>
+    <figure>
+      <div class="paths">
+        <div class="card">
+          <h3>放得进一帧</h3>
+          <ol class="path">
+            <li>信号，经 RTE</li>
+            <li class="here">COM 打包成 I-PDU</li>
+            <li>PduR 转发</li>
+            <li class="wire">CanIf 装进 L-PDU</li>
+            <li class="wire">总线</li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>一帧装不下</h3>
+          <ol class="path">
+            <li class="here">整条 I-PDU（DCM 或 COM）</li>
+            <li>PduR 转发</li>
+            <li class="cut">CanTp 切成 N-PDU</li>
+            <li class="wire">每个 N-PDU 进一个 L-PDU</li>
+            <li class="wire">总线，多帧</li>
+          </ol>
+        </div>
+      </div>
+      <figcaption>接收从总线往上走。CanTp 负责把 N-PDU 拼回 I-PDU，COM 负责把 I-PDU 拆成信号。</figcaption>
+    </figure>
+
+    <h2>对照时容易写错的地方</h2>
+    <div class="pair">
+      <p class="wrong">有 I-PDU 就有 N-PDU</p>
+      <p>只有走传输协议才有 N-PDU。</p>
+    </div>
+    <div class="pair">
+      <p class="wrong">非 TP 的 I-PDU 不能超过 8 字节</p>
+      <p>看这条总线的一个 L-PDU。经典 CAN 是 8 字节，CAN FD 是 64 字节。装不下的叫 Large I-PDU，走 TP。</p>
+    </div>
+    <div class="pair">
+      <p class="wrong">一条 I-PDU 只能属于一个组</p>
+      <p>可以属于任意多个同方向的组，也可以不属于任何组。一个组里不能混放送和接收。</p>
+    </div>
+    <div class="pair">
+      <p class="wrong">PduR 负责分段</p>
+      <p>分段是 CanTp。PduR 不改载荷。</p>
+    </div>
+
+    <div class="aside">
+      <p>I-PDU 组是 COM 里用来成组启动、停止的集合，初始化后默认是停止的。它不是第四种 PDU。</p>
+    </div>
+
+    <h2>合上之前</h2>
+    <p>问自己：这段字节现在在谁手里？在 COM 或 DCM，叫 I-PDU。在 CanTp，叫 N-PDU 或尚未切开的 N-SDU。在 CanIf 和总线上，叫 L-SDU / L-PDU。名字跟着观察点走。</p>
+    <details>
+      <summary>四个小问题的答案</summary>
+      <p>车速若一帧装得下，没有 N-PDU。200 字节由 CanTp 来切。PduR 不改载荷。同一段字节，CanTp 叫 N-PDU，CanIf 叫 L-SDU。</p>
+    </details>
+
+    <footer>
+      <p>步骤、自测和规范出处写在学习路线里。这一页是手账，用霞鹜文楷子集排版，授权见 fonts/OFL.txt。</p>
+    </footer>
+  </article>
+</body>
+</html>
