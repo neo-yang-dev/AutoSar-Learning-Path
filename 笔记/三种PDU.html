@@ -253,15 +253,6 @@
       border-left: 2px solid var(--margin);
     }
 
-    details {
-      margin-top: 0.6em;
-    }
-
-    summary {
-      cursor: pointer;
-      font-size: 20px;
-    }
-
     footer {
       margin-top: 1.6em;
       color: var(--ink-soft);
@@ -280,6 +271,40 @@
       .frames, .paths { grid-template-columns: 1fr; }
       .can { flex-wrap: wrap; }
       .field { min-width: 46%; border-bottom: 1px solid var(--ink); }
+    }
+
+    @page {
+      size: A4;
+      margin: 14mm 12mm 16mm;
+    }
+
+    @media print {
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      html, body { background: var(--paper); }
+      body { font-size: 15px; }
+      .sheet {
+        max-width: none;
+        margin: 0;
+        padding: 0 4px 0 22px;
+        border: 0;
+        box-shadow: none;
+        background: transparent;
+      }
+      .sheet::before { left: 0; }
+      header h1 { font-size: 32px; }
+      h2 { font-size: 22px; }
+      .frames { grid-template-columns: 1fr; }
+      .field { min-width: 18%; }
+      figure, .card, .band, .pair, .aside, .can { break-inside: avoid; page-break-inside: avoid; }
+      h2, h3, figcaption { break-after: avoid; page-break-after: avoid; }
+      .sheet {
+        border-left: 2px solid var(--margin);
+      }
+      .sheet::before { content: none; }
+      a { color: inherit; text-decoration: none; }
     }
   </style>
 </head>
@@ -397,10 +422,8 @@
 
     <h2>合上之前</h2>
     <p>问自己：这段字节现在在谁手里？在 COM 或 DCM，叫 I-PDU。在 CanTp，叫 N-PDU 或尚未切开的 N-SDU。在 CanIf 和总线上，叫 L-SDU / L-PDU。名字跟着观察点走。</p>
-    <details>
-      <summary>四个小问题的答案</summary>
-      <p>车速若一帧装得下，没有 N-PDU。200 字节由 CanTp 来切。PduR 不改载荷。同一段字节，CanTp 叫 N-PDU，CanIf 叫 L-SDU。</p>
-    </details>
+    <h2>四个小问题的答案</h2>
+    <p>车速若一帧装得下，没有 N-PDU。200 字节由 CanTp 来切。PduR 不改载荷。同一段字节，CanTp 叫 N-PDU，CanIf 叫 L-SDU。</p>
 
     <footer>
       <p>步骤、自测和规范出处写在学习路线里。这一页是手账，用霞鹜文楷子集排版，授权见 fonts/OFL.txt。</p>
